@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Weekly Schedule</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Weekly Schedule</h1>
+    <hr />
+    <form action="weekly-schedule" method="post">
+      <h3>Student ID</h3>
+      <input type="number" name="studentid" placeholder="Student ID#" />
+      <h3>Semester</h3>
+      <input type="radio" id="fall" name="semester" value="F" />
+      <label for="fall">Fall</label>
+      <input type="radio" id="spring" name="semester" value="S" />
+      <label for="Spring">Spring</label>
+      <h3>Year</h3>
+      <input type="number" name="year" placeholder="Year" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <iframe srcdoc="{{schedule}}" height="500" width="400"></iframe>
+  </body>
+</html>

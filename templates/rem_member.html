@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Remove Member</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Remove Members</h1>
+    <hr />
+    <form
+      action="rem-member"
+      method="post"
+      onsubmit="return confirm('Do you really want to remove this member?');"
+    >
+      <p>Student ID to Remove:</p>
+      <input type="number" name="studentid" placeholder="Student ID#" />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+    <h2>Members:</h2>
+    <iframe srcdoc="{{members}}" height="750" width="450"></iframe>
+  </body>
+</html>

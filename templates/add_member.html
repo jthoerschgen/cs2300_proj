@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Member</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Add Member</h1>
+    <hr />
+    <form action="add-member" method="post">
+      <p>First Name</p>
+      <input type="text" name="fname" placeholder="first name" />
+      <p>Last Name</p>
+      <input type="text" name="lname" placeholder="last name" />
+      <p>Year Joined</p>
+      <input type="number" name="yearjoined" placeholder="year joined" />
+      <p>Birthday</p>
+      <input type="date" name="birthday" placeholder="birthday" />
+      <p>Phone Number</p>
+      <input type="tel" name="pnumber" placeholder="phone number" />
+      <p>Password</p>
+      <input type="password" name="password" placeholder="password" />
+      <p>Big Brother</p>
+      <input type="number" name="bbrotherid" placeholder="big brother id" />
+      <hr />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+  </body>
+</html>

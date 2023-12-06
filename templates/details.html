@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Details</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Details Schedule</h1>
+    <hr />
+    <form action="details-schedule" method="post">
+      <h3>Starting Date:</h3>
+      <input type="date" name="start" placeholder="Start Date" />
+      <h3>Ending Date:</h3>
+      <input type="date" name="end" placeholder="End Date" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <form action="details-checkoff" method="post">
+      <h3>EBoard Student ID:</h3>
+      <input type="number" name="exec_id" placeholder="EBoard Student ID" />
+      <h3>EBoard Password:</h3>
+      <input type="password" name="exec_password" placeholder="Password" />
+      <h3>Detail Name:</h3>
+      <select name="detail_name">
+        <option value="Kitchen">Kitchen</option>
+        <option value="Bathroom">Bathroom</option>
+        <option value="Garbage">Garbage</option>
+      </select>
+      <h3>Detail Date:</h3>
+      <input type="date" name="detail_date" placeholder="Detail Date" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <hr />
+    <iframe srcdoc="{{schedule}}" height="500" width="475"></iframe>
+  </body>
+</html>
