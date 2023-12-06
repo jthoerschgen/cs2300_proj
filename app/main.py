@@ -1,6 +1,7 @@
 import sqlite3
 import traceback
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 import uvicorn
 from constants import DB_PATH
@@ -9,8 +10,10 @@ from database_funcs import (
     CheckOffDetail,
     DeleteMember,
     GenWeeklySchedule,
+    GetAllDepartments,
     GetAllMembers,
     GetDetails,
+    InsertCourse,
 )
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -117,6 +120,53 @@ async def RemMemberGet(request: Request):
     )
 
 
+@app.get("/get-departments")
+async def GetDepartments():
+    return GetAllDepartments()
+
+
+@app.post("/add-course")
+async def AddCoursePost(
+    request: Request,
+    studentid: int = Form(...),
+    year: int = Form(...),
+    semester: str = Form(...),
+    coursecode: int = Form(...),
+    department: str = Form(...),
+    starttime: str = Form(...),
+    endtime: str = Form(...),
+    days: list[str] = Form(...),
+):
+    try:
+        InsertCourse(
+            student_id=studentid,
+            year=year,
+            semester=semester,
+            course_code=coursecode,
+            department=department,
+            start_time=datetime.strptime(starttime, "%H:%M").time(),
+            end_time=datetime.strptime(endtime, "%H:%M").time(),
+            days=days,
+        )
+
+        schedulehtml: str = (
+            f"<p>Weekly Schedule for Member #{studentid}:</p>"
+            + f"<p>({'Fall' if semester == 'F' else 'Spring'} {year})</p>"
+            + GenWeeklySchedule(
+                studentid=studentid, semester=semester, year=year, conn=conn
+            )
+        )
+
+        return templates.TemplateResponse(
+            "weekly_schedule.html",
+            {"request": request, "schedule": schedulehtml},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
 @app.post("/weekly-schedule")
 async def WeeklySchedulePost(
     request: Request,
@@ -125,8 +175,12 @@ async def WeeklySchedulePost(
     year: int = Form(...),
 ):
     try:
-        schedulehtml: str = GenWeeklySchedule(
-            studentid=studentid, semester=semester, year=year, conn=conn
+        schedulehtml: str = (
+            f"<p>Weekly Schedule for Member #{studentid}:</p>"
+            + f"<p>({'Fall' if semester == 'F' else 'Spring'} {year})</p>"
+            + GenWeeklySchedule(
+                studentid=studentid, semester=semester, year=year, conn=conn
+            )
         )
 
         return templates.TemplateResponse(
@@ -142,7 +196,8 @@ async def WeeklySchedulePost(
 @app.get("/weekly-schedule")
 async def WeeklyScheduleGet(request: Request):
     return templates.TemplateResponse(
-        "weekly_schedule.html", {"request": request, "schedule": ""}
+        "weekly_schedule.html",
+        {"request": request},
     )
 
 

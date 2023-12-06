@@ -8,6 +8,8 @@
   <body>
     <h1>Weekly Schedule</h1>
     <hr />
+    <!--View Weekly Schedule Form-->
+    <h2>View Schedule</h2>
     <form action="weekly-schedule" method="post">
       <h3>Student ID</h3>
       <input type="number" name="studentid" placeholder="Student ID#" />
@@ -22,6 +24,79 @@
       <input type="submit" />
     </form>
     <hr />
+    <!--Weekly Schedule Viewer-->
     <iframe srcdoc="{{schedule}}" height="500" width="400"></iframe>
+    <hr />
+    <!--Add Course Form-->
+    <h2>Add Course</h2>
+    <form action="add-course" method="post" onsubmit="validateForm();">
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID#" />
+      <br /><br />
+      <label for="year">Year:</label>
+      <input type="number" name="year" placeholder="Year" />
+      <br /><br />
+      <label for="semester">Semester:</label>
+      <input type="radio" id="fall" name="semester" value="F" />
+      <label for="fall">Fall:</label>
+      <input type="radio" id="spring" name="semester" value="S" />
+      <label for="Spring">Spring:</label>
+      <br /><br />
+      <label for="coursecode">Course Code:</label>
+      <input type="number" name="coursecode" placeholder="course code" />
+      <br /><br />
+      <label for="department">Department:</label>
+      <select id="department" name="department"></select>
+      <br /><br />
+      <label for="starttime">Start Time:</label>
+      <input type="time" name="starttime" placeholder="Starting Time" />
+      <br /><br />
+      <label for="endtime">End Time:</label>
+      <input type="time" name="endtime" placeholder="Ending Time" />
+      <br /><br />
+      <label for="days">Days:</label>
+      <br />
+      <select id="days" name="days" multiple>
+        <option value="MON">Monday</option>
+        <option value="TUE">Tuesday</option>
+        <option value="WED">Wednesday</option>
+        <option value="THU">Thursday</option>
+        <option value="FRI">Friday</option>
+        <option value="SAT">Saturday</option>
+        <option value="SUN">Sunday</option>
+      </select>
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <!--Scripts-->
+    <script>
+      fetch("/get-departments")
+        .then((response) => response.json())
+        .then((data) => {
+          const dropdown = document.getElementById("department");
+
+          data.forEach((item) => {
+            const option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            dropdown.add(option);
+          });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    </script>
+    <script>
+      function validateForm() {
+        var start_time = document.getElementById("starttime").value;
+        var end_time = document.getElementById("endtime").value;
+
+        if (start_time >= end_time) {
+          alert("End time must be later than start time.");
+          return false;
+        }
+
+        return true;
+      }
+    </script>
+    <hr />
   </body>
 </html>

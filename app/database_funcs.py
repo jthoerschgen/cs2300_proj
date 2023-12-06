@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import date
+from datetime import date, time
 
 import pandas as pd
 from constants import CURRENT_SEMESTER, CURRENT_YEAR, DB_PATH
@@ -55,9 +55,7 @@ INSERT INTO members (
     password,
     bbrother
 )
-VALUES (
-        ?,?,?,?,?,?,?,?
-);
+VALUES (?,?,?,?,?,?,?,?);
             """,
             (
                 studentid,
@@ -164,6 +162,8 @@ ORDER BY
         df = pd.DataFrame.from_records(
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
+        pd.set_option("display.max_columns", None)
+        print(df)
         return df.to_html(index=False)
 
 
@@ -353,3 +353,87 @@ WHERE
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
         return df.to_html(index=False)
+
+
+def GetAllDepartments(
+    conn: sqlite3.Connection | None = None,
+) -> list[str]:
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        res = cur.execute(
+            """
+SELECT DISTINCT courses.department
+FROM courses;
+            """,
+            (),
+        )
+        conn.commit()
+        return [row[0] for row in res.fetchall()]
+
+
+def InsertCourse(
+    student_id: int,
+    year: int,
+    semester: str,
+    course_code: int,
+    department: str,
+    start_time: time,
+    end_time: time,
+    days: list[str],
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+INSERT INTO courses (
+    studentid,
+    year,
+    semester,
+    course_code,
+    department,
+    start,
+    end
+)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+            """,
+            (
+                student_id,
+                year,
+                semester,
+                course_code,
+                department,
+                start_time.strftime("%H:%M:%S"),
+                end_time.strftime("%H:%M:%S"),
+            ),
+        )
+
+        for day in days:
+            cur.execute(
+                """
+INSERT INTO course_days (
+    studentid,
+    year,
+    semester,
+    course_code,
+    department,
+    day
+)
+VALUES (?, ?, ?, ?, ?, ?);
+                """,
+                (student_id, year, semester, course_code, department, day),
+            )
+    return
+
+
+# ~TODO~
+# Modify member
+# Insert class DONE
+# Fine member
+# Grade information (put in weekly schedule?)
