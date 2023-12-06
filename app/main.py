@@ -92,7 +92,7 @@ async def RemMemberPost(
     studentid: int = Form(...),
 ):
     try:
-        DeleteMember(studentid=studentid)
+        DeleteMember(studentid=studentid, conn=conn)
         return templates.TemplateResponse(
             "rem_member.html",
             {
@@ -128,7 +128,7 @@ async def WeeklySchedulePost(
 ):
     try:
         schedulehtml: str = GenWeeklySchedule(
-            studentid=studentid, semester=semester, year=year
+            studentid=studentid, semester=semester, year=year, conn=conn
         )
 
         return templates.TemplateResponse(
@@ -155,7 +155,7 @@ async def DetailsSchedulePost(
     end: str = Form(...),
 ):
     try:
-        schedulehtml: str = GetDetails(start_date=start, end_date=end)
+        schedulehtml: str = GetDetails(start_date=start, end_date=end, conn=conn)
 
         return templates.TemplateResponse(
             "details.html",
@@ -181,6 +181,7 @@ async def DetailsCheckoffPost(
             exec_password=exec_password,
             detail_name=detail_name,
             detail_date=detail_date,
+            conn=conn,
         )
 
         return templates.TemplateResponse(
