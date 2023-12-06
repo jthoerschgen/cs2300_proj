@@ -1,21 +1,21 @@
-import uvicorn
-from fastapi import FastAPI, Request, Form, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from contextlib import asynccontextmanager
-from pathlib import Path
 import sqlite3
 import traceback
+from contextlib import asynccontextmanager
+
+import uvicorn
 from constants import DB_PATH
 from database_funcs import (
     AddMember,
+    CheckOffDetail,
+    DeleteMember,
     GenWeeklySchedule,
     GetAllMembers,
-    DeleteMember,
     GetDetails,
-    CheckOffDetail,
 )
+from fastapi import FastAPI, Form, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
 

@@ -1,7 +1,8 @@
 import sqlite3
 from datetime import date
+
 import pandas as pd
-from constants import DB_PATH, CURRENT_SEMESTER, CURRENT_YEAR
+from constants import CURRENT_SEMESTER, CURRENT_YEAR, DB_PATH
 
 
 def AddMember(
