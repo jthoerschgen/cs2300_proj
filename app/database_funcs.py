@@ -16,6 +16,19 @@ def AddMember(
     studentid: int | None = None,
     conn: sqlite3.Connection | None = None,
 ):
+    """_summary_
+
+    Args:
+        first_name (str): The first name of the member to add
+        last_name (str): The last name of the member to add
+        year_joined (int): _description_
+        birthday (date): _description_
+        phone_number (int): _description_
+        password (str): _description_
+        big_brother_id (int): _description_
+        studentid (int | None, optional): _description_. Defaults to None.
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -65,6 +78,12 @@ def DeleteMember(
     studentid: int,
     conn: sqlite3.Connection | None = None,
 ):
+    """_summary_
+
+    Args:
+        studentid (int): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -86,6 +105,17 @@ def GenWeeklySchedule(
     year: int,
     conn: sqlite3.Connection | None = None,
 ) -> str:
+    """_summary_
+
+    Args:
+        studentid (int): _description_
+        semester (str): _description_
+        year (int): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+
+    Returns:
+        str: _description_
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -140,6 +170,14 @@ ORDER BY
 def GetAllMembers(
     conn: sqlite3.Connection | None = None,
 ) -> str:
+    """_summary_
+
+    Args:
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+
+    Returns:
+        str: _description_
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -171,6 +209,17 @@ def LoginExec(
     password: str,
     conn: sqlite3.Connection | None = None,
 ) -> tuple[bool, dict]:
+    """_summary_
+
+    Args:
+        studentid (int): _description_
+        password (str): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+
+    Returns:
+        tuple[bool, dict]: _description_
+    """
+
     if not conn:
         conn = sqlite3.connect(DB_PATH)
 
@@ -213,6 +262,15 @@ def CheckOffDetail(
     detail_date: date,
     conn: sqlite3.Connection | None = None,
 ):
+    """_summary_
+
+    Args:
+        exec_id (int): _description_
+        exec_password (str): _description_
+        detail_name (str): _description_
+        detail_date (date): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
 
@@ -249,6 +307,16 @@ def GetDetails(
     end_date: date,
     conn: sqlite3.Connection | None = None,
 ) -> bool:
+    """_summary_
+
+    Args:
+        start_date (date): _description_
+        end_date (date): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+
+    Returns:
+        bool: _description_
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
 
