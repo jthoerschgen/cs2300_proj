@@ -30,7 +30,7 @@ CREATE TABLE "member_majors" (
 CREATE TABLE "actives" (
     "studentid" INTEGER NOT NULL,
     "cum_credit_hours" INTEGER NOT NULL DEFAULT 0,
-    "in_house" BOOLNOT NULL CHECK(
+    "in_house" BOOL NOT NULL CHECK(
         "in_house" == TRUE
         OR "in_house" == FALSE
     ),
@@ -53,7 +53,7 @@ CREATE TABLE "alumni_honors" (
         PRIMARY KEY("alumni_studentid", "honor")
 );
 CREATE TABLE "courses" (
-    "studentid" TEXT NOT NULL,
+    "studentid" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
     "semester" TEXT NOT NULL CHECK(
         "semester" = 'S'
@@ -77,7 +77,7 @@ CREATE TABLE "courses" (
     )
 );
 CREATE TABLE "course_days" (
-    "studentid" BLOB NOT NULL,
+    "studentid" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
     "semester" TEXT NOT NULL CHECK(
         "semester" = 'S'
@@ -172,7 +172,7 @@ CREATE TABLE "fine" (
     "issuer" INTEGER NOT NULL,
     "recipient" INTEGER NOT NULL,
     "reason" TEXT NOT NULL,
-    "date_issued" DATENOT NULL,
+    "date_issued" DATE NOT NULL,
     "amount" REAL NOT NULL,
     FOREIGN KEY("recipient") REFERENCES "members"("studentid") ON DELETE RESTRICT,
     FOREIGN KEY("issuer") REFERENCES "members"("studentid") ON DELETE RESTRICT,
