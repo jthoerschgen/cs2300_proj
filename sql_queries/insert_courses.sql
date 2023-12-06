@@ -1,3 +1,4 @@
+-- SQL Query for filling in data to the courses table
 INSERT INTO courses (
         studentid,
         year,

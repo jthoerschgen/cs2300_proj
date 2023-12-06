@@ -287,3 +287,44 @@ VALUES (5, 30, 1, 10),
     (23, 28, 0, 16),
     (24, 39, 1, 20),
     (25, 40, 1, 12);
+-- SQL Query for filling in data to the member_majors table
+INSERT INTO member_majors (studentid, major)
+VALUES (1, 'Computer Science'),
+    (2, 'Civil Engineering'),
+    (3, 'Computer Engineering'),
+    (3, 'Computer Science'),
+    (4, 'Mechanical Engineering'),
+    (5, 'Chemical Engineering'),
+    (6, 'Aerospace Engineering'),
+    (7, 'Mechanical Engineering'),
+    (8, 'Computer Engineering'),
+    (9, 'Computer Science'),
+    (10, 'Civil Engineering'),
+    (11, 'Computer Science'),
+    (12, 'Mechanical Engineering'),
+    (13, 'Mechanical Engineering'),
+    (14, 'Computer Engineering'),
+    (15, 'Computer Science'),
+    (16, 'Chemical Engineering'),
+    (16, 'Civil Engineering'),
+    (17, 'Mechanical Engineering'),
+    (18, 'Computer Science'),
+    (19, 'Computer Engineering'),
+    (20, 'Civil Engineering'),
+    (21, 'Mechanical Engineering'),
+    (21, 'Aerospace Engineering'),
+    (22, 'Civil Engineering'),
+    (23, 'Chemical Engineering'),
+    (24, 'Computer Science'),
+    (25, 'Civil Engineering');
+-- SQL Query for filling in data to the alumni table
+INSERT INTO alumni (studentid, grad_year, employer)
+VALUES (1, 2023, 'Software Solutions'),
+    (2, 2023, NULL),
+    (3, 2023, 'Cars, Cars, and Trucks LLC'),
+    (4, 2023, NULL);
+-- SQL Query for filling in data to the alumni_honors table
+INSERT INTO alumni_honors (alumni_studentid, honor)
+VALUES (2, 'summa cum laude'),
+    (2, 'coolest dude'),
+    (4, 'most likely to succeed');

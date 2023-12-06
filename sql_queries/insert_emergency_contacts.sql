@@ -1,3 +1,4 @@
+-- SQL Query for filling in data to the emergency_contacts table
 INSERT INTO emergency_contacts (
         studentid,
         fname,

@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 from pathlib import Path
+import sqlite3
 import traceback
 from constants import DB_PATH
 from database_funcs import (
@@ -15,9 +16,6 @@ from database_funcs import (
     GetDetails,
     CheckOffDetail,
 )
-
-
-import sqlite3
 
 conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
 

@@ -1,3 +1,4 @@
+-- SQL Query for filling in data to the fine table
 INSERT INTO "fine" (
         "issuer",
         "recipient",

@@ -262,7 +262,7 @@ SELECT
     members.fname,
     members.lname,
     details.studentid,
-    CASE 
+    CASE
         WHEN details.checked_off_by_id IS NOT NULL AND
             details.checked_by_off_position IS NOT NULL AND
             details.checked_by_off_semester IS NOT NULL AND

@@ -1,3 +1,4 @@
+-- SQL Query for filling in data to the exec_board table
 INSERT INTO exec_board (studentid, position, semester, year, can_vote)
 VALUES (1, 'President', 'F', 2019, 'TRUE'),
     (2, 'Secretary', 'F', 2019, 'FALSE'),

@@ -1,3 +1,4 @@
+-- SQL Query for filling in data to the studyhours table
 INSERT INTO "studyhours" ("studentid", "num_hrs", "can_vg", "sopro")
 VALUES (10, 4, true, false),
     (14, 4, false, false),
