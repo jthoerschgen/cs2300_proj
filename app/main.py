@@ -7,6 +7,7 @@ import uvicorn
 from constants import DB_PATH
 from database_funcs import (
     AddMember,
+    AddToDetail,
     CheckOffDetail,
     DeleteMember,
     GenWeeklySchedule,
@@ -240,6 +241,31 @@ async def DetailsCheckoffPost(
         return templates.TemplateResponse(
             "details.html",
             {"request": request, "schedule": ""},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.post("/add-to-details")
+async def DetailsAddMemberPost(
+    request: Request,
+    studentid: int = Form(...),
+    detail_name: str = Form(...),
+    detail_date: str = Form(...),
+):
+    try:
+        schedulehtml: str = GetDetails(
+            start_date=detail_date, end_date=detail_date, conn=conn
+        )
+        AddToDetail(
+            student_id=studentid, detail_name=detail_name, detail_date=detail_date
+        )
+
+        return templates.TemplateResponse(
+            "details.html",
+            {"request": request, "schedule": schedulehtml},
         )
     except Exception as _e:
         print(traceback.format_exc())

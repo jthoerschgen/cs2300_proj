@@ -163,6 +163,8 @@ LEFT JOIN actives
         df = pd.DataFrame.from_records(
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
+        pd.set_option("display.max_columns", None)
+        print(df)
         return df.to_html(index=False)
 
 
@@ -215,29 +217,57 @@ def CheckOffDetail(
 ):
     if not conn:
         conn = sqlite3.connect(DB_PATH)
+    with conn:
+        login_success, login_info = LoginExec(
+            studentid=exec_id, password=exec_password, conn=conn
+        )
+        if login_success:
+            cur = conn.cursor()
+            cur.execute(
+                """
+    UPDATE details
+    SET
+        checked_off_by_id = ?,
+        checked_by_off_position = ?,
+        checked_by_off_semester = ?,
+        checked_off_by_year = ?
+    WHERE
+        name = ? AND
+        day = ?;
+                """,
+                (
+                    login_info["studentid"],
+                    login_info["position"],
+                    login_info["semester"],
+                    login_info["year"],
+                    detail_name,
+                    detail_date,
+                ),
+            )
+            conn.commit()
+    return
 
-    login_success, login_info = LoginExec(studentid=exec_id, password=exec_password)
-    if login_success:
+
+def AddToDetail(
+    student_id: int,
+    detail_name: str,
+    detail_date: date,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+
+    with conn:
         cur = conn.cursor()
         cur.execute(
             """
-UPDATE details
-SET
-    checked_off_by_id = ?,
-    checked_by_off_position = ?,
-    checked_by_off_semester = ?,
-    checked_off_by_year = ?
-WHERE
-    name = ? AND
-    day = ?;
+INSERT INTO details ('name', 'day', 'studentid')
+VALUES (?, ?, ?);
             """,
             (
-                login_info["studentid"],
-                login_info["position"],
-                login_info["semester"],
-                login_info["year"],
                 detail_name,
                 detail_date,
+                student_id,
             ),
         )
         conn.commit()
@@ -284,6 +314,8 @@ WHERE
         df = pd.DataFrame.from_records(
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
+        pd.set_option("display.max_columns", None)
+        print(df)
         return df.to_html(index=False)
 
 
