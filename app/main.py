@@ -28,12 +28,19 @@ conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Executes code during app start-up and shut-down
-
-    Args:
-        app (FastAPI): FastAPI app
+    00
+        Args:
+            app (FastAPI): FastAPI app
     """
     # On start-up
     print("CS 2300 Project")
+    cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
+    conn.commit()
+    cur.execute("PRAGMA foreign_keys;")
+    conn.commit()
+    fks_on: int = cur.fetchone()[0]
+    print(f"PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
     yield
     # On shut-down
     print("Goodbye!")
