@@ -14,6 +14,19 @@ class DBFuncError(Exception):
         super().__init__(message)
 
 
+def CreateConn() -> sqlite3.Connection:
+    """Standarize Connection cration
+
+    Returns:
+        sqlite3.Connection: SQL database connection
+    """
+    conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
+    conn.commit()
+    return conn
+
+
 def AddMember(
     first_name: str,
     last_name: str,
@@ -46,7 +59,7 @@ def AddMember(
         None
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
         if studentid is None:
@@ -116,7 +129,7 @@ def DeleteMember(
         None
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
         cur.execute(
@@ -151,7 +164,7 @@ def GenWeeklySchedule(
         str: An HTML representation of the weekly schedule.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -218,7 +231,7 @@ def GetAllMembers(
         first name, last name, year joined, and active status.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -271,7 +284,7 @@ def LoginExec(
     """
 
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
 
     with conn:
         cur = conn.cursor()
@@ -330,7 +343,7 @@ def CheckOffDetail(
             The SQLite database connection. Defaults to None.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         login_success, login_info = LoginExec(
             studentid=exec_id, password=exec_password, conn=conn
@@ -369,7 +382,7 @@ def AddToDetail(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
 
     with conn:
         cur = conn.cursor()
@@ -412,7 +425,7 @@ def GetDetails(
         the specified date range, otherwise an empty string.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
 
     with conn:
         cur = conn.cursor()
@@ -468,7 +481,7 @@ def GetAllDepartments(
         list[str]: A list of unique department names.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -519,7 +532,7 @@ def InsertCourse(
         None
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -546,6 +559,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
                 end_time.strftime("%H:%M:%S"),
             ),
         )
+        conn.commit()
 
         for day in days:
             cur.execute(
@@ -562,6 +576,7 @@ VALUES (?, ?, ?, ?, ?, ?);
                 """,
                 (student_id, year, semester, course_code, department, day),
             )
+        conn.commit()
     return
 
 
@@ -579,7 +594,7 @@ def GetExec(
             The SQLite database connection. Defaults to None.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -617,7 +632,7 @@ def CheckIsInExec(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -659,7 +674,7 @@ def AddExec(
             The SQLite database connection. Defaults to None.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -718,7 +733,7 @@ def ModifyStudyHours(
             The SQLite database connection. Defaults to None.
     """
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -750,7 +765,7 @@ def ModifyActive(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -789,7 +804,7 @@ def AddEmerContact(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -837,7 +852,7 @@ def ModifyEmerContact(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -889,7 +904,7 @@ def AssignFine(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -920,7 +935,7 @@ def GetAlumni(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
 
@@ -952,7 +967,7 @@ def GoAlumni(
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
-        conn = sqlite3.connect(DB_PATH)
+        conn = CreateConn()
     with conn:
         cur = conn.cursor()
         cur.execute("DELETE FROM alumni WHERE studentid = ?;", (student_id,))

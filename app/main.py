@@ -4,12 +4,13 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 
 import uvicorn
-from constants import CURRENT_SEMESTER, CURRENT_YEAR, DB_PATH
+from constants import CURRENT_SEMESTER, CURRENT_YEAR
 from database_funcs import (
     AddExec,
     AddMember,
     AddToDetail,
     CheckOffDetail,
+    CreateConn,
     DeleteMember,
     GenWeeklySchedule,
     GetAllDepartments,
@@ -24,7 +25,7 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
+conn: sqlite3.Connection = CreateConn()
 
 
 @asynccontextmanager
@@ -41,12 +42,6 @@ async def lifespan(app: FastAPI):
     conn.commit()
     fks_on: int = cur.fetchone()[0]
     print(f"TESTING:       PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
-    cur.execute("PRAGMA foreign_keys = ON")
-    conn.commit()
-    cur.execute("PRAGMA foreign_keys;")
-    conn.commit()
-    fks_on = cur.fetchone()[0]
-    print(f"TESTING AGAIN: PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
     yield
     # On shut-down
     print("Goodbye!")
