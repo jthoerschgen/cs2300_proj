@@ -65,6 +65,11 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+@app.get("/modify-member", response_class=HTMLResponse)
+async def modify_member(request: Request):
+    return templates.TemplateResponse("mod_member.html", {"request": request})
+
+
 @app.post("/add-member")
 async def AddMemberPost(
     request: Request,
