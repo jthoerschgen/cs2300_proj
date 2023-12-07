@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Assign Fine</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Assign Fine</h1>
+    <hr />
+    <form action="assignfine" method="post">
+      <p>Issuer</p>
+      <input type="number" name="issuer" placeholder="IssuerID" />
+      <p>Recipient</p>
+      <input type="number" name="recipient" placeholder="RecipientID" />
+      <p>Reason</p>
+      <input type="text" name="reason" placeholder="Reason" />
+      <p>Date Issued</p>
+      <input type="date" name="date_issued" placeholder="Date Issued" />
+      <p>Fine Amount</p>
+      <input type="float" name="amount" placeholder="Fine Amount" />
+      <hr />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+  </body>
+</html>
