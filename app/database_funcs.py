@@ -1043,3 +1043,81 @@ VALUES (?, ?);
         )
         conn.commit()
     return
+
+
+def GetGrades(
+    student_id: int,
+    semester: str,
+    year: str,
+    conn: sqlite3.Connection | None = None,
+):
+    """Get table of a member's grades
+
+    Args:
+        student_id (int): Member's student id
+        semester (str): The semester to get grades from (F/S)
+        year (str): The year to get grades from
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
+    """
+    if not conn:
+        conn = CreateConn()
+    with conn:
+        cur = conn.cursor()
+        res = cur.execute(
+            """
+SELECT
+    courses.studentid,
+    courses.department,
+    courses.course_code,
+    courses.grade
+FROM courses
+WHERE
+    courses.studentid = ? AND
+    courses.semester = ? AND
+    courses.year = ?
+            """,
+            (student_id, semester, year),
+        )
+        conn.commit()
+        df = pd.DataFrame.from_records(
+            data=res.fetchall(), columns=[column[0] for column in res.description]
+        )
+        pd.set_option("display.max_columns", None)
+        print(df)
+        return df.to_html(index=False)
+
+
+def GetAvgGrade(
+    student_id: int,
+    semester: str,
+    year: str,
+    conn: sqlite3.Connection | None = None,
+) -> float:
+    """Get an average grade for a member
+
+    Args:
+        student_id (int): Member's student id
+        semester (str): The semester to get grades from (F/S)
+        year (str): The year to get grades from
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
+    """
+    if not conn:
+        conn = CreateConn()
+    with conn:
+        cur = conn.cursor()
+        res = cur.execute(
+            """
+SELECT
+    AVG(grade)
+FROM courses
+WHERE
+    courses.studentid = ? AND
+    courses.semester = ? AND
+    courses.year = ?
+            """,
+            (student_id, semester, year),
+        )
+        conn.commit()
+        return round(res.fetchone()[0], 4) * 100
