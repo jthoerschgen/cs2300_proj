@@ -743,3 +743,55 @@ WHERE
                 social_probation,
             ),
         )
+
+
+def GetAlumni(
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        res = cur.execute(
+            """
+SELECT
+    alumni.studentid AS 'Student ID',
+    members.fname AS 'First Name',
+    members.lname AS 'Last Name',
+    alumni.grad_year AS 'Grad Year',
+    alumni.employer AS 'Employer'
+FROM alumni
+JOIN members
+    ON alumni.studentid = members.studentid
+            """
+        )
+        conn.commit()
+        df = pd.DataFrame.from_records(
+            data=res.fetchall(), columns=[column[0] for column in res.description]
+        )
+        pd.set_option("display.max_columns", None)
+        print(df)
+        return df.to_html(index=False)
+
+
+def GoAlumni(
+    student_id: int,
+    employer: str | None,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM alumni WHERE studentid = ?;", (student_id,))
+        conn.commit()
+        cur.execute(
+            """
+INSERT INTO alumni (studentid, grad_year, employer)
+VALUES (?, ?, ?);
+                    """,
+            (student_id, CURRENT_YEAR, employer),
+        )
+        conn.commit()
+    return
