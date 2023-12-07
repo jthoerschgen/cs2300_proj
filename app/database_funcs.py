@@ -5,6 +5,15 @@ import pandas as pd
 from constants import CURRENT_SEMESTER, CURRENT_YEAR, DB_PATH
 
 
+class DBFuncError(Exception):
+    def __init__(
+        self,
+        message: str | None = None,
+    ):
+        self.message = message
+        super().__init__(message)
+
+
 def AddMember(
     first_name: str,
     last_name: str,
@@ -211,6 +220,8 @@ LEFT JOIN actives
         df = pd.DataFrame.from_records(
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
+        pd.set_option("display.max_columns", None)
+        print(df)
         return df.to_html(index=False)
 
 
@@ -291,29 +302,57 @@ def CheckOffDetail(
     """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
+    with conn:
+        login_success, login_info = LoginExec(
+            studentid=exec_id, password=exec_password, conn=conn
+        )
+        if login_success:
+            cur = conn.cursor()
+            cur.execute(
+                """
+    UPDATE details
+    SET
+        checked_off_by_id = ?,
+        checked_by_off_position = ?,
+        checked_by_off_semester = ?,
+        checked_off_by_year = ?
+    WHERE
+        name = ? AND
+        day = ?;
+                """,
+                (
+                    login_info["studentid"],
+                    login_info["position"],
+                    login_info["semester"],
+                    login_info["year"],
+                    detail_name,
+                    detail_date,
+                ),
+            )
+            conn.commit()
+    return
 
-    login_success, login_info = LoginExec(studentid=exec_id, password=exec_password)
-    if login_success:
+
+def AddToDetail(
+    student_id: int,
+    detail_name: str,
+    detail_date: date,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+
+    with conn:
         cur = conn.cursor()
         cur.execute(
             """
-UPDATE details
-SET
-    checked_off_by_id = ?,
-    checked_by_off_position = ?,
-    checked_by_off_semester = ?,
-    checked_off_by_year = ?
-WHERE
-    name = ? AND
-    day = ?;
+INSERT INTO details ('name', 'day', 'studentid')
+VALUES (?, ?, ?);
             """,
             (
-                login_info["studentid"],
-                login_info["position"],
-                login_info["semester"],
-                login_info["year"],
                 detail_name,
                 detail_date,
+                student_id,
             ),
         )
         conn.commit()
@@ -374,6 +413,8 @@ WHERE
         df = pd.DataFrame.from_records(
             data=res.fetchall(), columns=[column[0] for column in res.description]
         )
+        pd.set_option("display.max_columns", None)
+        print(df)
         return df.to_html(index=False)
 
 
@@ -481,6 +522,119 @@ VALUES (?, ?, ?, ?, ?, ?);
                 """,
                 (student_id, year, semester, course_code, department, day),
             )
+    return
+
+
+def GetExec(
+    semester: str,
+    year: int,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        res = cur.execute(
+            """
+SELECT
+    exec_board.studentid AS 'Student ID',
+    members.fname AS 'First Name',
+    members.lname AS 'Last Name',
+    exec_board.position AS 'Position',
+    exec_board.can_vote AS 'Voting'
+FROM exec_board
+JOIN members
+    ON exec_board.studentid = members.studentid
+WHERE
+    exec_board.semester = ? AND
+    exec_board.year = ?
+            """,
+            (semester, year),
+        )
+        conn.commit()
+        df = pd.DataFrame.from_records(
+            data=res.fetchall(), columns=[column[0] for column in res.description]
+        )
+        pd.set_option("display.max_columns", None)
+        print(df)
+        return df.to_html(index=False)
+
+
+def CheckIsInExec(
+    studentid: int,
+    position: str,
+    semester: str,
+    year: str,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        res = cur.execute(
+            """
+SELECT EXISTS (
+    SELECT 1
+    FROM exec_board
+    WHERE
+        exec_board.studentid = ? AND
+        exec_board.position = ? AND
+        exec_board.semester = ? AND
+        exec_board.year = ?
+) AS result;
+                """,
+            (studentid, position, semester, year),
+        )
+        conn.commit()
+        result: int = res.fetchone()[0]
+    return True if result == 1 else False
+
+
+def AddExec(
+    studentid: int,
+    position: str,
+    semester: str,
+    year: str,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        if (
+            CheckIsInExec(
+                studentid=studentid, position=position, semester=semester, year=year
+            )
+            == 1
+        ):
+            raise (
+                DBFuncError(
+                    f"""
+User is already serving in the executive board for the chosen term:
+    StudentID: {studentid}
+    Position:  {position}
+    Semester:  {semester}
+    Year:      {year}
+                    """
+                )
+            )
+        else:
+            can_vote: str = (
+                "TRUE"
+                if position in ("President", "Treasurer", "Recruitment")
+                else "FALSE"
+            )
+            res = cur.execute(
+                """
+INSERT INTO exec_board (studentid, position, semester, year, can_vote)
+VALUES (?, ?, ?, ?, ?)
+                """,
+                (studentid, position, semester, year, can_vote),
+            )
+            conn.commit()
     return
 
 

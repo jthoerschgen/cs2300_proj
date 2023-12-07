@@ -8,6 +8,7 @@
   <body>
     <h1>Details Schedule</h1>
     <hr />
+    <!--Details Schedule + Selection From-->
     <form action="details-schedule" method="post">
       <h3>Starting Date:</h3>
       <input type="date" name="start" placeholder="Start Date" />
@@ -17,24 +18,50 @@
       <input type="submit" />
     </form>
     <hr />
-    <form action="details-checkoff" method="post">
-      <h3>EBoard Student ID:</h3>
-      <input type="number" name="exec_id" placeholder="EBoard Student ID" />
-      <h3>EBoard Password:</h3>
-      <input type="password" name="exec_password" placeholder="Password" />
-      <h3>Detail Name:</h3>
+    <iframe srcdoc="{{schedule}}" height="500" width="475"></iframe>
+
+    <!--Add Member to Details-->
+    <hr />
+    <form action="add-to-details" method="post">
+      <h2>Add Member to Detail:</h2>
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID" />
+      <br /><br />
+      <label for="detail_name">Detail Name:</label>
       <select name="detail_name">
         <option value="Kitchen">Kitchen</option>
         <option value="Bathroom">Bathroom</option>
         <option value="Garbage">Garbage</option>
       </select>
-      <h3>Detail Date:</h3>
+      <br /><br />
+      <label for="detail_date">Detail Date:</label>
+      <input type="date" name="detail_date" placeholder="Detail Date" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+
+    <!--Details Check Off-->
+    <hr />
+    <form action="details-checkoff" method="post">
+      <h2>Check-Off Detail:</h2>
+      <label for="exec_id">EBoard Student ID:</label>
+      <input type="number" name="exec_id" placeholder="EBoard Student ID" />
+      <br /><br />
+      <label for="exec_password">EBoard Password:</label>
+      <input type="password" name="exec_password" placeholder="Password" />
+      <br /><br />
+      <label for="detail_name">Detail Name:</label>
+      <select name="detail_name">
+        <option value="Kitchen">Kitchen</option>
+        <option value="Bathroom">Bathroom</option>
+        <option value="Garbage">Garbage</option>
+      </select>
+      <br /><br />
+      <label for="detail_date">Detail Date:</label>
       <input type="date" name="detail_date" placeholder="Detail Date" />
       <br /><br />
       <input type="submit" />
     </form>
     <hr />
-    <hr />
-    <iframe srcdoc="{{schedule}}" height="500" width="475"></iframe>
   </body>
 </html>
