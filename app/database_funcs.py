@@ -646,12 +646,16 @@ def CheckIsInExec(
     Args:
         studentid (int): The unique identifier of the student.
         position (str): The position held by the student on the executive board.
-        semester (str): The semester during which the position is held (e.g., 'Fall', 'Spring').
-        year (str): The academic year in which the position is held (e.g., '2022-2023').
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+        semester (str):
+            The semester during which the position is held (e.g., 'Fall', 'Spring').
+        year (str):
+            The academic year in which the position is held (e.g., '2022-2023').
+        conn (sqlite3.Connection | None, optional):
+            SQLite database connection. Defaults to None.
 
     Returns:
-        bool: True if the student is in the executive board for the specified parameters, False otherwise.
+        bool: True if the student is in the executive board for the specified
+        parameters, False otherwise.
     """
     if not conn:
         conn = CreateConn()
@@ -800,9 +804,12 @@ def ModifyActive(
     Args:
         student_id (int): The unique identifier of the student.
         service_hours (int): The number of service hours to be added or modified.
-        is_in_house (bool | None, optional): Whether the student is in the house or not.
-            True if in the house, False if not in the house, None if no change. Defaults to None.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+        is_in_house (bool | None, optional):
+            Whether the student is in the house or not.
+            True if in the house, False if not in the house, None if no change.
+            Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            SQLite database connection. Defaults to None.
 
     Returns:
         None
@@ -868,7 +875,8 @@ def AddEmerContact(
         state (str): State of the emergency contact's address.
         email (str): Email address of the emergency contact.
         pnumber (str): Phone number of the emergency contact.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            SQLite database connection. Defaults to None.
 
     Returns:
         None
@@ -934,7 +942,8 @@ def ModifyEmerContact(
         state (str | None, optional): New state. Defaults to None.
         email (str | None, optional): New email address. Defaults to None.
         pnumber (str | None, optional): New phone number. Defaults to None.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            SQLite database connection. Defaults to None.
 
     Returns:
         None
@@ -1000,7 +1009,8 @@ def AssignFine(
         reason (str): The reason for issuing the fine.
         date_issued (date): The date when the fine was issued.
         amount (float): The amount of the fine.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            SQLite database connection. Defaults to None.
 
     Returns:
         None
