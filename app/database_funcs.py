@@ -1036,14 +1036,11 @@ def AssignFine(
 def GetAlumni(
     conn: sqlite3.Connection | None = None,
 ):
-    """
-    Retrieve alumni information from the database.
+    """Gets all almuni and their honors and returns as HTML table
 
     Args:
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
-
-    Returns:
-        str: HTML representation of the alumni information.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
     """
     if not conn:
         conn = CreateConn()
@@ -1080,16 +1077,13 @@ def GoAlumni(
     employer: str | None,
     conn: sqlite3.Connection | None = None,
 ):
-    """
-    Transition a member to alumni status in the database.
+    """Changes an active member to an alum
 
     Args:
-        student_id (int): The student ID of the member transitioning to alumni status.
-        employer (str | None): The employer information for the alumni. Defaults to None.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
-
-    Returns:
-        None
+        student_id (int): The alum's student id
+        employer (str | None): The name where the alum works
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
     """
     if not conn:
         conn = CreateConn()
@@ -1113,16 +1107,13 @@ def AddAlumHonor(
     honor: str | None,
     conn: sqlite3.Connection | None = None,
 ):
-    """
-    Add an honor to an alumni in the database.
+    """Record an honor an alum has received
 
     Args:
-        student_id (int): The student ID of the alumni receiving the honor.
-        honor (str | None): The honor to be added. Defaults to None.
-        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
-
-    Returns:
-        None
+        student_id (int): The alum's student id
+        honor (str | None): The name of the honor
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
     """
     if not conn:
         conn = CreateConn()
