@@ -20,7 +20,6 @@ from database_funcs import (
 )
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 conn: sqlite3.Connection = sqlite3.connect(DB_PATH)

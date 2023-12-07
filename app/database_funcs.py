@@ -78,6 +78,19 @@ VALUES (?,?,?,?,?,?,?,?);
             ),
         )
         conn.commit()
+        # add member to actives
+        cur.execute(
+            """
+INSERT INTO actives (
+    studentid,
+    in_house,
+    service_hours
+)
+VALUES (?,?,?);
+            """,
+            (studentid, 1, 0),
+        )
+        conn.commit()
     return
 
 
