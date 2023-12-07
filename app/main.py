@@ -4,8 +4,9 @@ from contextlib import asynccontextmanager
 from datetime import datetime
 
 import uvicorn
-from constants import DB_PATH
+from constants import CURRENT_SEMESTER, CURRENT_YEAR, DB_PATH
 from database_funcs import (
+    AddExec,
     AddMember,
     AddToDetail,
     CheckOffDetail,
@@ -14,6 +15,7 @@ from database_funcs import (
     GetAllDepartments,
     GetAllMembers,
     GetDetails,
+    GetExec,
     InsertCourse,
 )
 from fastapi import FastAPI, Form, HTTPException, Request
@@ -277,6 +279,75 @@ async def DetailsAddMemberPost(
 async def DetailsGet(request: Request):
     return templates.TemplateResponse(
         "details.html", {"request": request, "schedule": ""}
+    )
+
+
+@app.post("/get-exec")
+async def ShowExecBoardPost(
+    request: Request,
+    semester: str = Form(...),
+    year: str = Form(...),
+):
+    try:
+        exechtml: str = (
+            f"<p> Exec for {'Fall' if semester == 'F' else 'Spring'} {year}</p>"
+            + GetExec(semester=semester, year=year, conn=conn)
+        )
+
+        return templates.TemplateResponse(
+            "exec_board.html",
+            {"request": request, "execinfo": exechtml},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.post("/add-exec")
+async def AddExecBoardPost(
+    request: Request,
+    studentid: int = Form(...),
+    position: str = Form(...),
+    semester: str = Form(...),
+    year: str = Form(...),
+):
+    try:
+        AddExec(
+            studentid=studentid,
+            position=position,
+            semester=semester,
+            year=year,
+            conn=conn,
+        )
+        exechtml: str = (
+            f"<p> Exec for {'Fall' if semester == 'F' else 'Spring'} {year}</p>"
+            + GetExec(semester=semester, year=year, conn=conn)
+        )
+
+        return templates.TemplateResponse(
+            "exec_board.html",
+            {"request": request, "execinfo": exechtml},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/exec")
+async def ExecBoardGet(request: Request):
+    return templates.TemplateResponse(
+        "exec_board.html",
+        {
+            "request": request,
+            "execinfo": (
+                f"""
+<p> Exec for {'Fall' if CURRENT_SEMESTER == 'F' else 'Spring'} {CURRENT_YEAR}</p>
+                """
+                + GetExec(semester=CURRENT_SEMESTER, year=CURRENT_YEAR)
+            ),
+        },
     )
 
 
