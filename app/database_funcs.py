@@ -708,10 +708,14 @@ def ModifyStudyHours(
 
     Args:
         student_id (int): Id of the member whos study hours are being modified
-        number_hours (int | None, optional): The amount of hours each day a member is to study for. Defaults to None.
-        can_video_game (bool | None, optional): Determines if a member can play video games (1) or not(0). Defaults to None.
-        social_probation (bool | None, optional): Determines if a member is on social probation(1) or not(0). Defaults to None.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        number_hours (int | None, optional):
+            The amount of hours each day a member is to study for. Defaults to None.
+        can_video_game (bool | None, optional):
+            Determines if a member can play video games (1) or not(0). Defaults to None.
+        social_probation (bool | None, optional):
+            Determines if a member is on social probation(1) or not(0). Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
     """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
@@ -871,6 +875,42 @@ def ModifyEmerContact(
         WHERE studentid = ? AND fname = ? AND lname = ?;
         """,
             (student_id, f_name, l_name, *set_values),
+        )
+        conn.commit()
+    return
+
+
+def AssignFine(
+    issuer: int,
+    recipient: int,
+    reason: str,
+    date_issued: date,
+    amount: float,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            INSERT INTO fines (
+            issuer, 
+            recipient, 
+            reason, 
+            date_issued, 
+            amount
+            )
+            VALUES(?,?,?,?,?);
+            """,
+            (
+                issuer,
+                recipient,
+                reason,
+                date_issued,
+                amount,
+            ),
         )
         conn.commit()
     return
