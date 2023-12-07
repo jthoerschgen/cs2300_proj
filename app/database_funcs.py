@@ -640,20 +640,20 @@ VALUES (?, ?, ?, ?, ?)
 
 def ModifyStudyHours(
     student_id: int,
-    number_hours: int | None = None, 
-    can_video_game: bool | None = None, 
-    social_probation: bool | None = None, 
+    number_hours: int | None = None,
+    can_video_game: bool | None = None,
+    social_probation: bool | None = None,
     conn: sqlite3.Connection | None = None,
 ):
-    """_summary_
+    """Modify study hours that are attached to a StudentID
 
     Args:
-        student_id (int): Id of the member whos study hours are being modified 
+        student_id (int): Id of the member whos study hours are being modified
         number_hours (int | None, optional): The amount of hours each day a member is to study for. Defaults to None.
         can_video_game (bool | None, optional): Determines if a member can play video games (1) or not(0). Defaults to None.
         social_probation (bool | None, optional): Determines if a member is on social probation(1) or not(0). Defaults to None.
         conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
-    """  
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -661,29 +661,162 @@ def ModifyStudyHours(
 
         # Build the SET clause dynamically based on provided parameters
         set_clause = ", ".join(
-            f"{field} = ?" for field in ["num_hrs", "can_vg", "sopro"]
+            f"{field} = ?"
+            for field in ["number_hours", "can_video_game", "social_probation"]
             if locals()[field] is not None
         )
 
         cur.execute(
             f"""
-UPDATE studyhours 
+UPDATE studyhours
 SET {set_clause}
-WHERE 
+WHERE
     studentid = ?;
             """,
-            (
-                student_id,
-                number_hours,
-                can_video_game,
-                social_probation,
-            ),
+            (student_id,),
+        )
+        conn.commit()
+    return
+
+
+def ModifyActive(
+    student_id: int,
+    service_hours: int,
+    is_in_house: bool | None = None,
+    # ADD cum_gpa and cum_cred_hours?
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        # Build the SET clause dynamically based on provided parameters
+        set_clause = ", ".join(
+            "{} = {} + ?".format(field, field)
+            for field in ["service_hours"]
+            if locals()[field] is not None
         )
 
+        if is_in_house is not None:
+            set_clause += ", in_house = ?"
+
+        cur.execute(
+            f"""
+            UPDATE actives
+            SET {set_clause}
+            WHERE studentid = ?;
+            """,
+            (student_id,),
+        )
+        conn.commit()
+    return
+
+
+def AddEmerContact(
+    student_id: int,
+    f_name: str,
+    l_name: str,
+    zipcode: int,
+    street_address: str,
+    city: str,
+    state: str,
+    email: str,
+    pnumber: str,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+        INSERT INTO emergency_contacts ( 
+            studentid,
+            fname, 
+            lname, 
+            zipcode, 
+            street_address, 
+            city, 
+            state, 
+            email, 
+            pnumber
+        )
+        VALUES (?,?,?,?,?,?,?,?,?);
+        """,
+            (
+                student_id,
+                f_name,
+                l_name,
+                zipcode,
+                street_address,
+                city,
+                state,
+                email,
+                pnumber,
+            ),
+        )
+        conn.commit()
+    return
+
+
+def ModifyEmerContact(
+    student_id: int,
+    f_name: str,
+    l_name: str,
+    zipcode: int | None = None,
+    street_address: str | None = None,
+    city: str | None = None,
+    state: str | None = None,
+    email: str | None = None,
+    pnumber: str | None = None,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = sqlite3.connect(DB_PATH)
+    with conn:
+        cur = conn.cursor()
+
+        # Build the SET clause dynamically based on provided parameters
+        set_values = [
+            locals()[field]
+            for field in [
+                "zipcode",
+                "street_address",
+                "city",
+                "state",
+                "email",
+                "pnumber",
+            ]
+            if locals()[field] is not None
+        ]
+
+        # Build the SET clause dynamically based on provided parameters
+        set_clause = ", ".join(
+            f"{field} = ?"
+            for field in [
+                "zipcode",
+                "street_address",
+                "city",
+                "state",
+                "email",
+                "pnumber",
+            ]
+        )
+
+        cur.execute(
+            f"""
+        UPDATE emergency_contacts 
+        SET {set_clause}
+        WHERE studentid = ? AND fname = ? AND lname = ?;
+        """,
+            (student_id, f_name, l_name, *set_values),
+        )
+        conn.commit()
+    return
+
+
 # ~TODO~
-# Modify member (study hours, details, active/alumni)
-# Insert Emergency contact 
 # Assign Fine
 # Grade information (put in weekly schedule?)
-
-if __name__ == "__main__":
