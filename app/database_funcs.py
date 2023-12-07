@@ -653,20 +653,20 @@ VALUES (?, ?, ?, ?, ?)
 
 def ModifyStudyHours(
     student_id: int,
-    number_hours: int | None = None, 
-    can_video_game: bool | None = None, 
-    social_probation: bool | None = None, 
+    number_hours: int | None = None,
+    can_video_game: bool | None = None,
+    social_probation: bool | None = None,
     conn: sqlite3.Connection | None = None,
 ):
     """_summary_
 
     Args:
-        student_id (int): Id of the member whos study hours are being modified 
+        student_id (int): Id of the member whos study hours are being modified
         number_hours (int | None, optional): The amount of hours each day a member is to study for. Defaults to None.
         can_video_game (bool | None, optional): Determines if a member can play video games (1) or not(0). Defaults to None.
         social_probation (bool | None, optional): Determines if a member is on social probation(1) or not(0). Defaults to None.
         conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
-    """  
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -674,7 +674,8 @@ def ModifyStudyHours(
 
         # Build the SET clause dynamically based on provided parameters
         set_clause = ", ".join(
-            f"{field} = ?" for field in ["num_hrs", "can_vg", "sopro"]
+            f"{field} = ?"
+            for field in ["num_hrs", "can_vg", "sopro"]
             if locals()[field] is not None
         )
 
@@ -693,10 +694,9 @@ WHERE
             ),
         )
 
+
 # ~TODO~
 # Modify member (study hours, details, active/alumni)
-# Insert Emergency contact 
+# Insert Emergency contact
 # Assign Fine
 # Grade information (put in weekly schedule?)
-
-if __name__ == "__main__":
