@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alums</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Alumni</h1>
+    <hr />
+    <h2>View Term:</h2>
+    <form action="add-alum" method="post">
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID" />
+      <br /><br />
+      <label for="employer">Employer:</label>
+      <input type="text" name="employer" placeholder="Employer" value="" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <!--Weekly Schedule Viewer-->
+    <iframe srcdoc="{{aluminfo}}" height="600" width="500"></iframe>
+    <hr />
+  </body>
+</html>

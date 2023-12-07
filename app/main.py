@@ -14,8 +14,10 @@ from database_funcs import (
     GenWeeklySchedule,
     GetAllDepartments,
     GetAllMembers,
+    GetAlumni,
     GetDetails,
     GetExec,
+    GoAlumni,
     InsertCourse,
 )
 from fastapi import FastAPI, Form, HTTPException, Request
@@ -353,6 +355,42 @@ async def ExecBoardGet(request: Request):
                 """
                 + GetExec(semester=CURRENT_SEMESTER, year=CURRENT_YEAR)
             ),
+        },
+    )
+
+
+@app.post("/add-alum")
+async def AddExecBoardPost(
+    request: Request,
+    studentid: int = Form(...),
+    employer: str | None = Form(None),
+):
+    try:
+        if employer and len(employer) == 0:
+            employer = None
+        GoAlumni(
+            student_id=studentid,
+            employer=employer,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "exec_board.html",
+            {"request": request, "execinfo": GetAlumni()},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/alumni")
+async def AlumniGet(request: Request):
+    return templates.TemplateResponse(
+        "alumni.html",
+        {
+            "request": request,
+            "aluminfo": (GetAlumni()),
         },
     )
 
