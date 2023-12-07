@@ -2,6 +2,7 @@
  CS 2300 Project F23
  INIT Database
  */
+PRAGMA foreign_keys = ON;
 /*
  CREATE TABLES
  */
@@ -23,9 +24,8 @@ CREATE TABLE "members" (
 CREATE TABLE "member_majors" (
     "studentid" INTEGER NOT NULL,
     "major" TEXT NOT NULL,
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE
-    SET NULL,
-        PRIMARY KEY("studentid", "major")
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE,
+    PRIMARY KEY("studentid", "major")
 );
 CREATE TABLE "actives" (
     "studentid" INTEGER NOT NULL,
@@ -35,21 +35,20 @@ CREATE TABLE "actives" (
     ),
     "service_hours" INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY("studentid"),
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE RESTRICT
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE
 );
 CREATE TABLE "alumni" (
     "studentid" INTEGER NOT NULL,
     "grad_year" INTEGER NOT NULL,
     "employer" TEXT,
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE RESTRICT,
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE,
     PRIMARY KEY("studentid")
 );
 CREATE TABLE "alumni_honors" (
     "alumni_studentid" INTEGER NOT NULL,
     "honor" TEXT NOT NULL,
-    FOREIGN KEY("alumni_studentid") REFERENCES "alumni"("studentid") ON DELETE
-    SET NULL,
-        PRIMARY KEY("alumni_studentid", "honor")
+    FOREIGN KEY("alumni_studentid") REFERENCES "alumni"("studentid") ON DELETE CASCADE,
+    PRIMARY KEY("alumni_studentid", "honor")
 );
 CREATE TABLE "courses" (
     "studentid" INTEGER NOT NULL,
@@ -66,7 +65,7 @@ CREATE TABLE "courses" (
         "grade" <= 1
         AND "grade" >= 0
     ),
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE RESTRICT,
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE,
     PRIMARY KEY(
         "studentid",
         "year",
@@ -105,16 +104,15 @@ CREATE TABLE "course_days" (
         "course_code",
         "year",
         "department"
-    ) ON DELETE
-    SET NULL,
-        PRIMARY KEY(
-            "studentid",
-            "year",
-            "semester",
-            "course_code",
-            "department",
-            "day"
-        )
+    ) ON DELETE CASCADE,
+    PRIMARY KEY(
+        "studentid",
+        "year",
+        "semester",
+        "course_code",
+        "department",
+        "day"
+    )
 );
 CREATE TABLE "exec_board" (
     "studentid" INTEGER NOT NULL,
@@ -125,9 +123,8 @@ CREATE TABLE "exec_board" (
     ),
     "year" INTEGER NOT NULL,
     "can_vote" BOOL NOT NULL DEFAULT 'FALSE',
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE
-    SET NULL,
-        PRIMARY KEY("studentid", "position", "semester", "year")
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE,
+    PRIMARY KEY("studentid", "position", "semester", "year")
 );
 CREATE TABLE "details" (
     "name" TEXT NOT NULL,
@@ -165,7 +162,7 @@ CREATE TABLE "emergency_contacts" (
         "pnumber" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
     ),
     PRIMARY KEY("studentid", "lname", "fname"),
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE RESTRICT
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE
 );
 CREATE TABLE "fine" (
     "issuer" INTEGER NOT NULL,
@@ -173,8 +170,8 @@ CREATE TABLE "fine" (
     "reason" TEXT NOT NULL,
     "date_issued" DATE NOT NULL,
     "amount" REAL NOT NULL,
-    FOREIGN KEY("recipient") REFERENCES "members"("studentid") ON DELETE RESTRICT,
-    FOREIGN KEY("issuer") REFERENCES "members"("studentid") ON DELETE RESTRICT,
+    FOREIGN KEY("recipient") REFERENCES "members"("studentid") ON DELETE CASCADE,
+    FOREIGN KEY("issuer") REFERENCES "members"("studentid") ON DELETE CASCADE,
     PRIMARY KEY("issuer", "recipient", "reason", "date_issued")
 );
 CREATE TABLE "studyhours" (
@@ -182,9 +179,8 @@ CREATE TABLE "studyhours" (
     "num_hrs" INTEGER NOT NULL,
     "can_vg" BOOL NOT NULL,
     "sopro" BOOL NOT NULL,
-    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE
-    SET NULL,
-        PRIMARY KEY("studentid")
+    FOREIGN KEY("studentid") REFERENCES "members"("studentid") ON DELETE CASCADE,
+    PRIMARY KEY("studentid")
 );
 /*
  INSERT DATA

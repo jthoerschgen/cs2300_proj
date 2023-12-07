@@ -26,8 +26,8 @@ def AddMember(
     conn: sqlite3.Connection | None = None,
 ):
     """
-    Adds a new user to the database.
-    It is implemented through both server-side Python and SQL code and an HTML form for user input.
+    Adds a new user to the database. It is implemented through both server-side Python
+    and SQL code and an HTML form for user input.
 
     Args:
         first_name (str): The first name of the member to add.
@@ -37,8 +37,10 @@ def AddMember(
         phone_number (int): The phone number of the member to add.
         password (str): Password for the new members account.
         big_brother_id (int): The ID of the new members "big brother".
-        studentid (int | None, optional): The student ID of the new member. Defaults to None.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        studentid (int | None, optional):
+            The student ID of the new member. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
         None
@@ -83,6 +85,19 @@ VALUES (?,?,?,?,?,?,?,?);
             ),
         )
         conn.commit()
+        # add member to actives
+        cur.execute(
+            """
+INSERT INTO actives (
+    studentid,
+    in_house,
+    service_hours
+)
+VALUES (?,?,?);
+            """,
+            (studentid, 1, 0),
+        )
+        conn.commit()
     return
 
 
@@ -94,7 +109,8 @@ def DeleteMember(
 
     Args:
         studentid (int): The StudentID of the member to be deleted
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
         None
@@ -121,13 +137,15 @@ def GenWeeklySchedule(
     conn: sqlite3.Connection | None = None,
 ) -> str:
     """
-    Generate a weekly schedule for a student based on the classes associated with that studentID
+    Generate a weekly schedule for a student based on the classes associated with that
+    studentID
 
     Args:
         studentid (int): The StudentID of the student for whom the schedule is generated.
         semester (str): The semester for which the schedule is generated.
         year (int): The year for which the schedule is generated.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
         str: An HTML representation of the weekly schedule.
@@ -192,10 +210,12 @@ def GetAllMembers(
     Retrieve information for all members.
 
     Args:
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
-        str: An HTML representation of member information, including StudentID, first name, last name, year joined, and active status.
+        str: An HTML representation of member information, including StudentID,
+        first name, last name, year joined, and active status.
     """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
@@ -232,17 +252,22 @@ def LoginExec(
 ) -> tuple[bool, dict]:
     """
     Authenticate an executive board member's login credentials.
-    This function checks if the provided StudentID, password, semester, and year match an executive board member's entry in the database.
-    If the credentials are valid, the function returns a tuple with a boolean indicating successful login
-    and a dictionary containing executive board information such as StudentID, position, semester, and year.
+    This function checks if the provided StudentID, password, semester, and year match
+    an executive board member's entry in the database. If the credentials are valid, the
+    function returns a tuple with a boolean indicating successful login and a dictionary
+    containing executive board information such as StudentID, position, semester, and
+    year.
 
     Args:
         studentid (int): The StudentID of the executive board member.
-        password (str): The password associated with the executive board member's account.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        password (str):
+            The password associated with the executive board member's account.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
-        tuple[bool, dict]: A tuple containing a boolean indicating the login success and a dictionary with executive board information if successful.
+        tuple[bool, dict]: A tuple containing a boolean indicating the login success and
+        a dictionary with executive board information if successful.
     """
 
     if not conn:
@@ -290,15 +315,19 @@ def CheckOffDetail(
     """
     Update details to mark a task as checked off by an executive.
 
-    This function verifies the login credentials of an executive board member using the provided `exec_id` and `exec_password`.
-    If the login is successful, it updates the details of a task named `detail_name` on the specified `detail_date`, marking it as checked off by the executive.
+    This function verifies the login credentials of an executive board member using the
+    provided `exec_id` and `exec_password`. If the login is successful, it updates the
+    details of a task named `detail_name` on the specified `detail_date`, marking it as
+    checked off by the executive.
 
     Args:
         exec_id (int): The StudentID of the executive board member.
-        exec_password (str): The password associated with the executive board member's account.
+        exec_password (str):
+            The password associated with the executive board member's account.
         detail_name (str): The name of the task to be marked as checked off.
         detail_date (date): The date of the task to be marked as checked off.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
     """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
@@ -367,16 +396,20 @@ def GetDetails(
     """
     Retrieve house chore details within a specified date range.
 
-    This function queries the database for details of house chores (referred to as "details") that fall within the date range defined by `start_date` and `end_date`.
-    It returns a boolean indicating whether there are house chores within the specified date range.
+    This function queries the database for details of house chores (referred to as
+    "details") that fall within the date range defined by `start_date` and
+    `end_date`. It returns a boolean indicating whether there are house chores within
+    the specified date range.
 
     Args:
         start_date (date): The start date of the desired date range.
         end_date (date): The end date of the desired date range.
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
-        bool: An HTML representation of house chore details if chores are found within the specified date range, otherwise an empty string.
+        bool: An HTML representation of house chore details if chores are found within
+        the specified date range, otherwise an empty string.
     """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
@@ -424,10 +457,12 @@ def GetAllDepartments(
     """
     Retrieve a list of all unique departments from the database.
 
-    This function queries the database for distinct department names from the 'courses' table and returns a list containing these department names.
+    This function queries the database for distinct department names from the 'courses'
+    table and returns a list containing these department names.
 
     Args:
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Returns:
         list[str]: A list of unique department names.
@@ -462,7 +497,10 @@ def InsertCourse(
     """
     Insert a new course record into the database.
 
-    This function inserts a new course record into the 'courses' table and corresponding entries in the 'course_days' table. The course details include student ID, academic year, semester, course code, department, start time, and end time. The course days specify the days of the week the course meets.
+    This function inserts a new course record into the 'courses' table and corresponding
+    entries in the 'course_days' table. The course details include student ID, academic
+    year, semester, course code, department, start time, and end time. The course days
+    specify the days of the week the course meets.
 
     Args:
         student_id (int): The StudentID associated with the course.
@@ -472,8 +510,10 @@ def InsertCourse(
         department (str): The department offering the course.
         start_time (time): The start time of the course.
         end_time (time): The end time of the course.
-        days (list[str]): A list of days on which the course meets (e.g., ['MON', 'WED', 'FRI']).
-        conn (sqlite3.Connection | None, optional): The SQLite database connection. Defaults to None.
+        days (list[str]):
+            A list of days on which the course meets (e.g., ['MON', 'WED', 'FRI']).
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
 
     Return:
         None
@@ -530,6 +570,14 @@ def GetExec(
     year: int,
     conn: sqlite3.Connection | None = None,
 ):
+    """Gets the exec board for a semster and year combination
+
+    Args:
+        semester (str): The selected semester
+        year (int): The selected year
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -599,6 +647,17 @@ def AddExec(
     year: str,
     conn: sqlite3.Connection | None = None,
 ):
+    """Adds a member to the exutive board if the user is not already serving for that
+    term.
+
+    Args:
+        studentid (int): The StudentID of the member being added to the table
+        position (str): The position the member served
+        semester (str): The semester the member served (F/S)
+        year (str): The year the member served
+        conn (sqlite3.Connection | None, optional):
+            The SQLite database connection. Defaults to None.
+    """
     if not conn:
         conn = sqlite3.connect(DB_PATH)
     with conn:
@@ -627,7 +686,7 @@ User is already serving in the executive board for the chosen term:
                 if position in ("President", "Treasurer", "Recruitment")
                 else "FALSE"
             )
-            res = cur.execute(
+            cur.execute(
                 """
 INSERT INTO exec_board (studentid, position, semester, year, can_vote)
 VALUES (?, ?, ?, ?, ?)
@@ -640,6 +699,9 @@ VALUES (?, ?, ?, ?, ?)
 
 def ModifyStudyHours(
     student_id: int,
+    number_hours: int | None = None,
+    can_video_game: bool | None = None,
+    social_probation: bool | None = None,
     number_hours: int | None = None,
     can_video_game: bool | None = None,
     social_probation: bool | None = None,
