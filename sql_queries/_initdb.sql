@@ -30,8 +30,8 @@ CREATE TABLE "member_majors" (
 CREATE TABLE "actives" (
     "studentid" INTEGER NOT NULL,
     "in_house" BOOL NOT NULL CHECK(
-        "in_house" == TRUE
-        OR "in_house" == FALSE
+        "in_house" = TRUE
+        OR "in_house" = FALSE
     ),
     "service_hours" INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY("studentid"),
@@ -53,14 +53,14 @@ CREATE TABLE "alumni_honors" (
 CREATE TABLE "courses" (
     "studentid" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
-    "semester" TEXT NOT NULL CHECK(
+    "semester" CHAR(1) NOT NULL CHECK(
         "semester" = 'S'
         OR "semester" = 'F'
     ),
     "course_code" INTEGER NOT NULL,
     "department" TEXT NOT NULL,
     "start" TIME NOT NULL,
-    "end" TIMENOT NULL,
+    "end" TIME NOT NULL,
     "grade" REAL NOT NULL DEFAULT 1 CHECK(
         "grade" <= 1
         AND "grade" >= 0
@@ -77,7 +77,7 @@ CREATE TABLE "courses" (
 CREATE TABLE "course_days" (
     "studentid" INTEGER NOT NULL,
     "year" INTEGER NOT NULL,
-    "semester" TEXT NOT NULL CHECK(
+    "semester" CHAR(1) NOT NULL CHECK(
         "semester" = 'S'
         OR "semester" = 'F'
     ),
@@ -117,7 +117,7 @@ CREATE TABLE "course_days" (
 CREATE TABLE "exec_board" (
     "studentid" INTEGER NOT NULL,
     "position" TEXT NOT NULL,
-    "semester" TEXT NOT NULL CHECK(
+    "semester" CHAR(1) NOT NULL CHECK(
         "semester" = 'S'
         OR "semester" = 'F'
     ),
@@ -128,11 +128,11 @@ CREATE TABLE "exec_board" (
 );
 CREATE TABLE "details" (
     "name" TEXT NOT NULL,
-    "day" DATE NOT1 Name Type Schema details NULL,
+    "day" DATE NOT NULL,
     "studentid" INTEGER NOT NULL,
     "checked_off_by_id" TEXT,
     "checked_by_off_position" TEXT,
-    "checked_by_off_semester" TEXT CHECK(
+    "checked_by_off_semester" CHAR(1) CHECK(
         "semester" = 'S'
         OR "semester" = 'F'
         OR "semester" = NULL
@@ -155,7 +155,7 @@ CREATE TABLE "emergency_contacts" (
     "lname" TEXT NOT NULL,
     "zipcode" INTEGER NOT NULL,
     "street_address" TEXT NOT NULL,
-    "city" TEXTNOT NULL,
+    "city" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "email" TEXT NOT NULL CHECK("email" LIKE '%_@_%._%'),
     "pnumber" TEXT NOT NULL CHECK(

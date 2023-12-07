@@ -570,7 +570,7 @@ def GetExec(
     year: int,
     conn: sqlite3.Connection | None = None,
 ):
-    """Gets the exec board for a semster and year combination
+    """Gets the exec board for a semester and year combination
 
     Args:
         semester (str): The selected semester
