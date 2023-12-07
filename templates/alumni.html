@@ -14,7 +14,23 @@
       <input type="number" name="studentid" placeholder="Student ID" />
       <br /><br />
       <label for="employer">Employer:</label>
-      <input type="text" name="employer" placeholder="Employer" value="" />
+      <input
+        type="text"
+        name="employer"
+        placeholder="Employer (Optional)"
+        value=""
+      />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <h2>Add Honor:</h2>
+    <form action="add-alum-honor" method="post">
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID" />
+      <br /><br />
+      <label for="employer">Honor:</label>
+      <input type="text" name="honor" placeholder="Honor" />
       <br /><br />
       <input type="submit" />
     </form>
