@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exec</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Ececutive Board</h1>
+    <hr />
+    <h2>View Term:</h2>
+    <form action="get-exec" method="post">
+      <label for="semester">Semester:</label>
+      <input type="radio" id="fall" name="semester" value="F" />
+      <label for="fall">Fall</label>
+      <input type="radio" id="spring" name="semester" value="S" />
+      <label for="Spring">Spring</label>
+      <br /><br />
+      <label for="year">Year:</label>
+      <input type="number" name="year" placeholder="Year" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <!--Weekly Schedule Viewer-->
+    <iframe srcdoc="{{execinfo}}" height="200" width="400"></iframe>
+    <hr />
+    <!--Add Exec Board Member-->
+    <form action="add-exec" method="post">
+      <h2>Add Exec:</h2>
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID" />
+      <br /><br />
+      <label for="position">Position:</label>
+      <br />
+      <input type="radio" id="President" name="position" value="President" />
+      <label for="President">President</label>
+      <br />
+      <input type="radio" id="Secretary" name="position" value="Secretary" />
+      <label for="Secretary">Secretary</label>
+      <br />
+      <input type="radio" id="Treasurer" name="position" value="Treasurer" />
+      <label for="Treasurer">Treasurer</label>
+      <br />
+      <input
+        type="radio"
+        id="Recruitment"
+        name="position"
+        value="Recruitment"
+      />
+      <label for="Recruitment">Recruitment</label>
+      <br /><br />
+      <label for="semester">Semester:</label>
+      <input type="radio" id="fall" name="semester" value="F" />
+      <label for="fall">Fall</label>
+      <input type="radio" id="spring" name="semester" value="S" />
+      <label for="Spring">Spring</label>
+      <br /><br />
+      <label for="year">Year:</label>
+      <input type="number" name="year" placeholder="Year" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+  </body>
+</html>
