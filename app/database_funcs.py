@@ -963,10 +963,13 @@ SELECT
     members.fname AS 'First Name',
     members.lname AS 'Last Name',
     alumni.grad_year AS 'Grad Year',
-    alumni.employer AS 'Employer'
+    alumni.employer AS 'Employer',
+    alumni_honors.honor AS 'Honor'
 FROM alumni
 JOIN members
     ON alumni.studentid = members.studentid
+LEFT JOIN alumni_honors
+    ON alumni.studentid = alumni_honors.alumni_studentid
             """
         )
         conn.commit()
@@ -987,7 +990,7 @@ def GoAlumni(
         conn = CreateConn()
     with conn:
         cur = conn.cursor()
-        cur.execute("DELETE FROM alumni WHERE studentid = ?;", (student_id,))
+        cur.execute("DELETE FROM actives WHERE studentid = ?;", (student_id,))
         conn.commit()
         cur.execute(
             """
@@ -995,6 +998,26 @@ INSERT INTO alumni (studentid, grad_year, employer)
 VALUES (?, ?, ?);
                     """,
             (student_id, CURRENT_YEAR, employer),
+        )
+        conn.commit()
+    return
+
+
+def AddAlumHonor(
+    student_id: int,
+    honor: str | None,
+    conn: sqlite3.Connection | None = None,
+):
+    if not conn:
+        conn = CreateConn()
+    with conn:
+        cur = conn.cursor()
+        cur.execute(
+            """
+INSERT INTO alumni_honors (alumni_studentid, honor)
+VALUES (?, ?);
+                    """,
+            (student_id, honor),
         )
         conn.commit()
     return

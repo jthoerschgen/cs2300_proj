@@ -6,6 +6,7 @@ from datetime import datetime
 import uvicorn
 from constants import CURRENT_SEMESTER, CURRENT_YEAR
 from database_funcs import (
+    AddAlumHonor,
     AddExec,
     AddMember,
     AddToDetail,
@@ -375,6 +376,32 @@ async def AddAlumniPost(
         GoAlumni(
             student_id=studentid,
             employer=employer,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "alumni.html",
+            {
+                "request": request,
+                "aluminfo": (GetAlumni()),
+            },
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.post("/add-alum-honor")
+async def AddAlumniPost(
+    request: Request,
+    studentid: int = Form(...),
+    honor: str = Form(...),
+):
+    try:
+        AddAlumHonor(
+            student_id=studentid,
+            honor=honor,
             conn=conn,
         )
 
