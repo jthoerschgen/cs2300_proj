@@ -35,14 +35,18 @@ async def lifespan(app: FastAPI):
             app (FastAPI): FastAPI app
     """
     # On start-up
-    print("CS 2300 Project")
+    print("Starting CS 2300 Project...")
     cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys;")
+    conn.commit()
+    fks_on: int = cur.fetchone()[0]
+    print(f"TESTING:       PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
     cur.execute("PRAGMA foreign_keys = ON")
     conn.commit()
     cur.execute("PRAGMA foreign_keys;")
     conn.commit()
-    fks_on: int = cur.fetchone()[0]
-    print(f"PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
+    fks_on = cur.fetchone()[0]
+    print(f"TESTING AGAIN: PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
     yield
     # On shut-down
     print("Goodbye!")
@@ -360,7 +364,7 @@ async def ExecBoardGet(request: Request):
 
 
 @app.post("/add-alum")
-async def AddExecBoardPost(
+async def AddAlumniPost(
     request: Request,
     studentid: int = Form(...),
     employer: str | None = Form(None),
@@ -375,8 +379,11 @@ async def AddExecBoardPost(
         )
 
         return templates.TemplateResponse(
-            "exec_board.html",
-            {"request": request, "execinfo": GetAlumni()},
+            "alumni.html",
+            {
+                "request": request,
+                "aluminfo": (GetAlumni()),
+            },
         )
     except Exception as _e:
         print(traceback.format_exc())
