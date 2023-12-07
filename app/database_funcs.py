@@ -381,6 +381,14 @@ def AddToDetail(
     detail_date: date,
     conn: sqlite3.Connection | None = None,
 ):
+    """_summary_
+
+    Args:
+        student_id (int): _description_
+        detail_name (str): _description_
+        detail_date (date): _description_
+        conn (sqlite3.Connection | None, optional): _description_. Defaults to None.
+    """
     if not conn:
         conn = CreateConn()
 
@@ -631,6 +639,20 @@ def CheckIsInExec(
     year: str,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Checks if a student with a specific position, in a given semester and year,
+    is a part of the executive board.
+
+    Args:
+        studentid (int): The unique identifier of the student.
+        position (str): The position held by the student on the executive board.
+        semester (str): The semester during which the position is held (e.g., 'Fall', 'Spring').
+        year (str): The academic year in which the position is held (e.g., '2022-2023').
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        bool: True if the student is in the executive board for the specified parameters, False otherwise.
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -772,6 +794,19 @@ def ModifyActive(
     is_in_house: bool | None = None,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Modifies active status and service hours for a student in the database.
+
+    Args:
+        student_id (int): The unique identifier of the student.
+        service_hours (int): The number of service hours to be added or modified.
+        is_in_house (bool | None, optional): Whether the student is in the house or not.
+            True if in the house, False if not in the house, None if no change. Defaults to None.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -820,6 +855,24 @@ def AddEmerContact(
     pnumber: str,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Adds a new emergency contact to the database.
+
+    Args:
+        student_id (int): The unique identifier of the student.
+        f_name (str): First name of the emergency contact.
+        l_name (str): Last name of the emergency contact.
+        zipcode (int): Zipcode of the emergency contact's address.
+        street_address (str): Street address of the emergency contact.
+        city (str): City of the emergency contact's address.
+        state (str): State of the emergency contact's address.
+        email (str): Email address of the emergency contact.
+        pnumber (str): Phone number of the emergency contact.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -868,6 +921,24 @@ def ModifyEmerContact(
     pnumber: str | None = None,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Modify information for an existing emergency contact in the database.
+
+    Args:
+        student_id (int): The unique identifier of the student.
+        f_name (str): First name of the emergency contact.
+        l_name (str): Last name of the emergency contact.
+        zipcode (int | None, optional): New zipcode. Defaults to None.
+        street_address (str | None, optional): New street address. Defaults to None.
+        city (str | None, optional): New city. Defaults to None.
+        state (str | None, optional): New state. Defaults to None.
+        email (str | None, optional): New email address. Defaults to None.
+        pnumber (str | None, optional): New phone number. Defaults to None.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -920,6 +991,20 @@ def AssignFine(
     amount: float,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Assign a fine to a member in the database.
+
+    Args:
+        issuer (int): The ID of the member issuing the fine.
+        recipient (int): The ID of the member receiving the fine.
+        reason (str): The reason for issuing the fine.
+        date_issued (date): The date when the fine was issued.
+        amount (float): The amount of the fine.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -951,6 +1036,15 @@ def AssignFine(
 def GetAlumni(
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Retrieve alumni information from the database.
+
+    Args:
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        str: HTML representation of the alumni information.
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -986,6 +1080,17 @@ def GoAlumni(
     employer: str | None,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Transition a member to alumni status in the database.
+
+    Args:
+        student_id (int): The student ID of the member transitioning to alumni status.
+        employer (str | None): The employer information for the alumni. Defaults to None.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
@@ -1008,6 +1113,17 @@ def AddAlumHonor(
     honor: str | None,
     conn: sqlite3.Connection | None = None,
 ):
+    """
+    Add an honor to an alumni in the database.
+
+    Args:
+        student_id (int): The student ID of the alumni receiving the honor.
+        honor (str | None): The honor to be added. Defaults to None.
+        conn (sqlite3.Connection | None, optional): SQLite database connection. Defaults to None.
+
+    Returns:
+        None
+    """
     if not conn:
         conn = CreateConn()
     with conn:
