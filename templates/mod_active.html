@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modify Active</title>
+    <a href="/">Home</a>
+  </head>
+  <body>
+    <h1>Modify Active</h1>
+    <hr />
+    <form action="mod-active" method="post">
+      <p>StudentID</p>
+      <input type="number" name="studentid" placeholder="StudentID" required />
+      <p>Service Hours</p>
+      <input type="number" name="service_hours" placeholder="Service Hours" />
+      <p>In House</p>
+      <select name="in_house">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+      <hr />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+  </body>
+</html>

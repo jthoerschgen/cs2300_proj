@@ -744,6 +744,12 @@ def ModifyStudyHours(
             if locals()[field] is not None
         )
 
+        set_values = [
+            locals()[field]
+            for field in ["number_hours", "can_video_game", "social_probation"]
+            if locals()[field] is not None
+        ]
+
         cur.execute(
             f"""
 UPDATE studyhours
@@ -751,7 +757,10 @@ SET {set_clause}
 WHERE
     studentid = ?;
             """,
-            (student_id,),
+            (
+                *set_values,
+                student_id,
+            ),
         )
         conn.commit()
     return
@@ -761,7 +770,6 @@ def ModifyActive(
     student_id: int,
     service_hours: int,
     is_in_house: bool | None = None,
-    # ADD cum_gpa and cum_cred_hours?
     conn: sqlite3.Connection | None = None,
 ):
     if not conn:
@@ -779,13 +787,22 @@ def ModifyActive(
         if is_in_house is not None:
             set_clause += ", in_house = ?"
 
+        set_values = [
+            locals()[field]
+            for field in ["service_hours", "in_house"]
+            if locals()[field] is not None
+        ]
+
         cur.execute(
             f"""
             UPDATE actives
             SET {set_clause}
             WHERE studentid = ?;
             """,
-            (student_id,),
+            (
+                *set_values,
+                student_id,
+            ),
         )
         conn.commit()
     return

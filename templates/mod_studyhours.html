@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modify Study Hours</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Modify Study Hours</h1>
+    <hr />
+    <form action="mod-studyhours" method="post">
+      <p>StudentID</p>
+      <input type="number" name="studentid" placeholder="StudentID" required />
+      <p>Number of Hours</p>
+      <input type="number" name="num_hrs" placeholder="Number of Hours" />
+      <p>Can Video Game</p>
+      <select name="can_vg" placeholder="Can Video Game">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+      <p>Social Probation</p>
+      <select name="sopro" placeholder="Social Probation">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+      <hr />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+  </body>
+</html>

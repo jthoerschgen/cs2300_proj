@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Modify Emergency Contact</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Modify Emergency Contact</h1>
+    <hr />
+    <form action="mod-emercontact" method="post">
+      <p>StudentID</p>
+      <input type="number" name="studentid" placeholder="StudentID" required />
+      <p>First Name</p>
+      <input type="text" name="fname" placeholder="First Name" required />
+      <p>Last Name</p>
+      <input type="text" name="lname" placeholder="Last Name" required />
+      <p>Zipcode</p>
+      <input type="number" name="zipcode" placeholder="Zipcode" />
+      <p>Street Address</p>
+      <input type="text" name="street_address" placeholder="Street Address" />
+      <p>City</p>
+      <input type="text" name="city" placeholder="City" />
+      <p>State</p>
+      <input type="text" name="state" placeholder="State" />
+      <p>Email</p>
+      <input type="text" name="email" placeholder="Email" />
+      <p>Phone Number</p>
+      <input type="tel" name="pnumber" placeholder="Phone Number" />
+      <hr />
+      <input type="submit" />
+    </form>
+    <p>{{result}}</p>
+  </body>
+</html>

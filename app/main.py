@@ -20,6 +20,11 @@ from database_funcs import (
     GetExec,
     GoAlumni,
     InsertCourse,
+    AddEmerContact,
+    ModifyEmerContact,
+    ModifyStudyHours,
+    ModifyActive,
+    AssignFine,
 )
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -394,6 +399,208 @@ async def AlumniGet(request: Request):
             "request": request,
             "aluminfo": (GetAlumni()),
         },
+    )
+
+
+@app.post("/add-emercontact")
+async def AddEmerContactPost(
+    request: Request,
+    studentid: int = Form(...),
+    fname: str = Form(...),
+    lname: str = Form(...),
+    zipcode: int = Form(...),
+    street_address: str = Form(...),
+    city: str = Form(...),
+    state: str = Form(...),
+    email: str = Form(...),
+    pnumber: str = Form(...),
+):
+    try:
+        AddEmerContact(
+            student_id=studentid,
+            fname=fname,
+            lname=lname,
+            zipcode=zipcode,
+            street_address=street_address,
+            city=city,
+            state=state,
+            email=email,
+            pnumber=pnumber,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "add_emercontact.html",
+            {"request": request, "result": f"{fname} {lname}, has been submitted."},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/add-emercontact")
+async def AddEmerContactGet(request: Request):
+    return templates.TemplateResponse(
+        "add_emercontact.html", {"request": request, "result": "Add Emergency Contact"}
+    )
+
+
+@app.post("/mod-emercontact")
+async def ModifyEmerContactPost(
+    request: Request,
+    studentid: int = Form(...),
+    fname: str = Form(...),
+    lname: str = Form(...),
+    zipcode: int = Form(None),
+    street_address: str = Form(None),
+    city: str = Form(None),
+    state: str = Form(None),
+    email: str = Form(None),
+    pnumber: str = Form(None),
+):
+    try:
+        ModifyEmerContact(
+            student_id=studentid,
+            fname=fname,
+            lname=lname,
+            zipcode=zipcode,
+            street_address=street_address,
+            city=city,
+            state=state,
+            email=email,
+            pnumber=pnumber,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "mod_emercontact.html",
+            {"request": request, "result": f"{fname} {lname}, has been updated."},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/mod-emercontact")
+async def ModifyEmerContactGet(request: Request):
+    return templates.TemplateResponse(
+        "mod_emercontact.html",
+        {"request": request, "result": "Modify Emergency Contact"},
+    )
+
+
+@app.post("/mod-studyhours")
+async def ModifyStudyHoursPost(
+    request: Request,
+    studentid: int = Form(...),
+    num_hrs: int = Form(None),
+    can_vg: bool = Form(None),
+    sopro: bool = Form(None),
+):
+    try:
+        ModifyStudyHours(
+            student_id=studentid,
+            number_hours=num_hrs,
+            can_video_game=can_vg,
+            social_probation=sopro,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "mod_studyhours.html",
+            {
+                "request": request,
+                "result": f"student {studentid} study hours have been updated.",
+            },
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/mod-studyhours")
+async def ModifyStudyHoursGet(request: Request):
+    return templates.TemplateResponse(
+        "mod_emercontact.html",
+        {"request": request, "result": "Modify Study Hours"},
+    )
+
+
+@app.post("/mod-active")
+async def ModifyActivePost(
+    request: Request,
+    studentid: int = Form(...),
+    service_hours: int = Form(None),
+    in_house: bool = Form(None),
+):
+    try:
+        ModifyActive(
+            student_id=studentid,
+            service_hours=service_hours,
+            is_in_house=in_house,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "mod_studyhours.html",
+            {
+                "request": request,
+                "result": f"active {studentid} has been updated.",
+            },
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/mod-active")
+async def ModifyActiveGet(request: Request):
+    return templates.TemplateResponse(
+        "mod_active.html",
+        {"request": request, "result": "Modify Active"},
+    )
+
+
+@app.post("/assignfine")
+async def AssignFinePost(
+    request: Request,
+    issuer: int = Form(...),
+    recipient: int = Form(...),
+    reason: str = Form(...),
+    date_issued: str = Form(...),
+    amount: float = Form(...),
+):
+    try:
+        AssignFine(
+            issuer=issuer,
+            recipient=recipient,
+            reason=reason,
+            date_issued=date_issued,
+            amount=amount,
+            conn=conn,
+        )
+
+        return templates.TemplateResponse(
+            "assignfine.html",
+            {
+                "request": request,
+                "result": f"{recipient} has been fined {amount} by {issuer}.",
+            },
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/assignfine")
+async def AssignFineGet(request: Request):
+    return templates.TemplateResponse(
+        "assignfine.html", {"request": request, "result": "Assign Fine"}
     )
 
 
