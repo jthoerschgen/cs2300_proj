@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Grades</title>
+    <a href="/">home</a>
+  </head>
+  <body>
+    <h1>Grade Report</h1>
+    <hr />
+    <!--View Weekly Schedule Form-->
+    <h2>View Report</h2>
+    <form action="get-grades" method="post">
+      <label for="studentid">Student ID:</label>
+      <input type="number" name="studentid" placeholder="Student ID#" />
+      <br /><br />
+      <label for="semester">Semester:</label>
+      <input type="radio" id="fall" name="semester" value="F" />
+      <label for="fall">Fall</label>
+      <input type="radio" id="spring" name="semester" value="S" />
+      <label for="Spring">Spring</label>
+      <br /><br />
+      <label for="year">Year:</label>
+      <input type="number" name="year" placeholder="Year" />
+      <br /><br />
+      <input type="submit" />
+    </form>
+    <hr />
+    <!--Weekly Schedule Viewer-->
+    <p>Average Grade: {{avg}}</p>
+    <iframe srcdoc="{{grades}}" height="500" width="400"></iframe>
+    <hr />
+  </body>
+</html>

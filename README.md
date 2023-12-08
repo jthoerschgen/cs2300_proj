@@ -10,7 +10,7 @@ Required Software:
 - [Anaconda](https://www.anaconda.com/)
 - [DB Browser for SQLite](https://sqlitebrowser.org/) (Optional)
 
-In the root of this repository is a YAML file with the correct config to instantiate an Anaconda environment with all of the necesary  packages. Create an Anaconda environment  with it using the following command in an Anaconda powershell window:
+In the root of this repository is a YAML file with the correct config to instantiate an Anaconda environment with all of the necessary packages. Create an Anaconda environment  with it using the following command in an Anaconda powershell window:
 
 ```
     conda env create --file \cs2300_proj\CS2300.yml

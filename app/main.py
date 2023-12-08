@@ -7,9 +7,11 @@ import uvicorn
 from constants import CURRENT_SEMESTER, CURRENT_YEAR
 from database_funcs import (
     AddAlumHonor,
+    AddEmerContact,
     AddExec,
     AddMember,
     AddToDetail,
+    AssignFine,
     CheckOffDetail,
     CreateConn,
     DeleteMember,
@@ -17,15 +19,15 @@ from database_funcs import (
     GetAllDepartments,
     GetAllMembers,
     GetAlumni,
+    GetAvgGrade,
     GetDetails,
     GetExec,
+    GetGrades,
     GoAlumni,
     InsertCourse,
-    AddEmerContact,
+    ModifyActive,
     ModifyEmerContact,
     ModifyStudyHours,
-    ModifyActive,
-    AssignFine,
 )
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -634,6 +636,38 @@ async def AssignFinePost(
 async def AssignFineGet(request: Request):
     return templates.TemplateResponse(
         "assignfine.html", {"request": request, "result": "Assign Fine"}
+    )
+
+
+@app.post("/get-grades")
+async def GetGradesPost(
+    request: Request,
+    studentid: int = Form(...),
+    semester: str = Form(...),
+    year: int = Form(...),
+):
+    try:
+        grade_report_html: str = GetGrades(
+            student_id=studentid, semester=semester, year=year
+        )
+        avg_grade: float = GetAvgGrade(
+            student_id=studentid, semester=semester, year=year
+        )
+
+        return templates.TemplateResponse(
+            "grades.html",
+            {"request": request, "grades": grade_report_html, "avg": avg_grade},
+        )
+    except Exception as _e:
+        print(traceback.format_exc())
+        print(_e)
+        return HTTPException(status_code=500, detail=str(_e))
+
+
+@app.get("/grades")
+async def GradesGet(request: Request):
+    return templates.TemplateResponse(
+        "grades.html", {"request": request, "grades": "", "avg": ""}
     )
 
 
