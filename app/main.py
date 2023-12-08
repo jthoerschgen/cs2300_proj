@@ -48,6 +48,7 @@ async def lifespan(app: FastAPI):
     conn.commit()
     fks_on: int = cur.fetchone()[0]
     print(f"TESTING:       PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
+    print(cur.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall())
     yield
     # On shut-down
     print("Goodbye!")
@@ -63,7 +64,7 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/modify-member", response_class=HTMLResponse)
+@app.get("/mod-member", response_class=HTMLResponse)
 async def modify_member(request: Request):
     return templates.TemplateResponse("mod_member.html", {"request": request})
 
@@ -450,8 +451,8 @@ async def AddEmerContactPost(
     try:
         AddEmerContact(
             student_id=studentid,
-            fname=fname,
-            lname=lname,
+            f_name=fname,
+            l_name=lname,
             zipcode=zipcode,
             street_address=street_address,
             city=city,
@@ -494,8 +495,8 @@ async def ModifyEmerContactPost(
     try:
         ModifyEmerContact(
             student_id=studentid,
-            fname=fname,
-            lname=lname,
+            f_name=fname,
+            l_name=lname,
             zipcode=zipcode,
             street_address=street_address,
             city=city,
