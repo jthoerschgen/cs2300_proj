@@ -1222,7 +1222,7 @@ def GetAvgGrade(
     semester: str,
     year: str,
     conn: sqlite3.Connection | None = None,
-) -> float:
+) -> float | None:
     """Get an average grade for a member
 
     Args:
@@ -1249,4 +1249,8 @@ WHERE
             (student_id, semester, year),
         )
         conn.commit()
-        return round(res.fetchone()[0], 4) * 100
+        try:
+            avg_grade: float = round(res.fetchone()[0], 4) * 100
+            return avg_grade
+        except TypeError:
+            return None
