@@ -50,7 +50,6 @@ async def lifespan(app: FastAPI):
     conn.commit()
     fks_on: int = cur.fetchone()[0]
     print(f"TESTING:       PRAGMA foreign_keys = {'ON' if fks_on == 1 else 'OFF'}")
-    print(cur.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall())
     yield
     # On shut-down
     print("Goodbye!")
