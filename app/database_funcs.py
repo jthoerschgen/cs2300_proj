@@ -23,7 +23,6 @@ def CreateConn() -> sqlite3.Connection:
     conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("PRAGMA foreign_keys = ON")
-    print("test Path: ", DB_PATH)
     conn.commit()
     return conn
 
