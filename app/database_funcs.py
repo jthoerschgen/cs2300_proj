@@ -765,7 +765,7 @@ def ModifyStudyHours(
             cur.execute(
                 """
                 UPDATE studyhours
-                SET number_hours = ?
+                SET num_hrs = ?
                 WHERE studentid = ?;
                 """,
                 (number_hours, student_id),
@@ -776,7 +776,7 @@ def ModifyStudyHours(
             cur.execute(
                 """
                 UPDATE studyhours
-                SET can_video_game = ?
+                SET can_vg = ?
                 WHERE studentid = ?;
                 """,
                 (can_video_game, student_id),
@@ -787,7 +787,7 @@ def ModifyStudyHours(
             cur.execute(
                 """
                 UPDATE studyhours
-                SET social_probation = ?
+                SET sopro = ?
                 WHERE studentid = ?;
                 """,
                 (social_probation, student_id),

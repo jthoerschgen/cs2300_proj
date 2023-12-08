@@ -545,7 +545,7 @@ async def ModifyStudyHoursPost(
             "mod_studyhours.html",
             {
                 "request": request,
-                "result": f"student {studentid} study hours have been updated.",
+                "result": f"Student {studentid} study hours have been updated.",
             },
         )
     except Exception as _e:
@@ -557,7 +557,7 @@ async def ModifyStudyHoursPost(
 @app.get("/mod-studyhours")
 async def ModifyStudyHoursGet(request: Request):
     return templates.TemplateResponse(
-        "mod_emercontact.html",
+        "mod_studyhours.html",
         {"request": request, "result": "Modify Study Hours"},
     )
 
@@ -578,7 +578,7 @@ async def ModifyActivePost(
         )
 
         return templates.TemplateResponse(
-            "mod_studyhours.html",
+            "mod_active.html",
             {
                 "request": request,
                 "result": f"active {studentid} has been updated.",
