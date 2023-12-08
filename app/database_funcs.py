@@ -23,6 +23,7 @@ def CreateConn() -> sqlite3.Connection:
     conn: sqlite3.Connection = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute("PRAGMA foreign_keys = ON")
+    print("test Path: ", DB_PATH)
     conn.commit()
     return conn
 
@@ -763,31 +764,39 @@ def ModifyStudyHours(
     with conn:
         cur = conn.cursor()
 
-        # Build the SET clause dynamically based on provided parameters
-        set_clause = ", ".join(
-            f"{field} = ?"
-            for field in ["number_hours", "can_video_game", "social_probation"]
-            if locals()[field] is not None
-        )
+        # Update number_hours if not None
+        if number_hours is not None:
+            cur.execute(
+                """
+                UPDATE studyhours
+                SET num_hrs = ?
+                WHERE studentid = ?;
+                """,
+                (number_hours, student_id),
+            )
 
-        set_values = [
-            locals()[field]
-            for field in ["number_hours", "can_video_game", "social_probation"]
-            if locals()[field] is not None
-        ]
+        # Update can_video_game if not None
+        if can_video_game is not None:
+            cur.execute(
+                """
+                UPDATE studyhours
+                SET can_vg = ?
+                WHERE studentid = ?;
+                """,
+                (can_video_game, student_id),
+            )
 
-        cur.execute(
-            f"""
-UPDATE studyhours
-SET {set_clause}
-WHERE
-    studentid = ?;
-            """,
-            (
-                *set_values,
-                student_id,
-            ),
-        )
+        # Update social_probation if not None
+        if social_probation is not None:
+            cur.execute(
+                """
+                UPDATE studyhours
+                SET sopro = ?
+                WHERE studentid = ?;
+                """,
+                (social_probation, student_id),
+            )
+
         conn.commit()
     return
 
@@ -819,33 +828,28 @@ def ModifyActive(
     with conn:
         cur = conn.cursor()
 
-        # Build the SET clause dynamically based on provided parameters
-        set_clause = ", ".join(
-            "{} = {} + ?".format(field, field)
-            for field in ["service_hours"]
-            if locals()[field] is not None
-        )
+        # Update service_hours if not None
+        if service_hours is not None:
+            cur.execute(
+                """
+                UPDATE actives
+                SET service_hours = service_hours + ?
+                WHERE studentid = ?;
+                """,
+                (service_hours, student_id),
+            )
 
+        # Update is_in_house if not None
         if is_in_house is not None:
-            set_clause += ", in_house = ?"
+            cur.execute(
+                """
+                UPDATE actives
+                SET in_house = ?
+                WHERE studentid = ?;
+                """,
+                (is_in_house, student_id),
+            )
 
-        set_values = [
-            locals()[field]
-            for field in ["service_hours", "in_house"]
-            if locals()[field] is not None
-        ]
-
-        cur.execute(
-            f"""
-            UPDATE actives
-            SET {set_clause}
-            WHERE studentid = ?;
-            """,
-            (
-                *set_values,
-                student_id,
-            ),
-        )
         conn.commit()
     return
 
@@ -953,41 +957,72 @@ def ModifyEmerContact(
     with conn:
         cur = conn.cursor()
 
-        # Build the SET clause dynamically based on provided parameters
-        set_values = [
-            locals()[field]
-            for field in [
-                "zipcode",
-                "street_address",
-                "city",
-                "state",
-                "email",
-                "pnumber",
-            ]
-            if locals()[field] is not None
-        ]
+        # Update zipcode if not None
+        if zipcode is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET zipcode = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (zipcode, student_id, f_name, l_name),
+            )
 
-        # Build the SET clause dynamically based on provided parameters
-        set_clause = ", ".join(
-            f"{field} = ?"
-            for field in [
-                "zipcode",
-                "street_address",
-                "city",
-                "state",
-                "email",
-                "pnumber",
-            ]
-        )
+        # Update street_address if not None
+        if street_address is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET street_address = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (street_address, student_id, f_name, l_name),
+            )
 
-        cur.execute(
-            f"""
-        UPDATE emergency_contacts 
-        SET {set_clause}
-        WHERE studentid = ? AND fname = ? AND lname = ?;
-        """,
-            (student_id, f_name, l_name, *set_values),
-        )
+        # Update city if not None
+        if city is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET city = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (city, student_id, f_name, l_name),
+            )
+
+        # Update state if not None
+        if state is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET state = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (state, student_id, f_name, l_name),
+            )
+
+        # Update email if not None
+        if email is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET email = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (email, student_id, f_name, l_name),
+            )
+
+        # Update pnumber if not None
+        if pnumber is not None:
+            cur.execute(
+                """
+                UPDATE emergency_contacts 
+                SET pnumber = ?
+                WHERE studentid = ? AND fname = ? AND lname = ?;
+                """,
+                (pnumber, student_id, f_name, l_name),
+            )
+
         conn.commit()
     return
 
@@ -1022,7 +1057,7 @@ def AssignFine(
 
         cur.execute(
             """
-            INSERT INTO fines (
+            INSERT INTO fine (
             issuer, 
             recipient, 
             reason, 
